@@ -1,0 +1,16 @@
+gradle-wrapper.jar
+/.gradle
+/captures/
+/gradlew
+/gradlew.bat
+/local.properties
+GeneratedPluginRegistrant.java
+.cxx/
+
+key.properties
+**/*.keystore
+**/keystore.jks
+# Signing keys must never be committed. The release keystore is supplied to
+# CI through the GULSHAN_TUBE_KEYSTORE_BASE64 secret and decoded at build time.
+**/gulshantube-release.jks
+*.jks

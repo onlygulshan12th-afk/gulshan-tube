@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Releases & APKs
+    url: https://github.com/GULSHAN-TUBE/GULSHAN TUBE/releases
+    about: Download builds and read release notes
+  - name: Security report
+    url: https://github.com/GULSHAN-TUBE/GULSHAN TUBE/blob/main/SECURITY.md
+    about: How to report vulnerabilities privately

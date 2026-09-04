@@ -1,0 +1,87 @@
+plugins {
+    id "com.android.application"
+    id "kotlin-android"
+    id "dev.flutter.flutter-gradle-plugin"
+}
+
+def releaseStoreFile = file("gulshantube-release.jks")
+def ciStoreFile = file("keystore.jks")
+def storeToUse = releaseStoreFile.exists() ? releaseStoreFile : (ciStoreFile.exists() ? ciStoreFile : null)
+def releaseRequested = gradle.startParameter.taskNames.any { it.toLowerCase().contains("release") }
+
+android {
+    namespace "com.gulshantube.app"
+    // AndroidX (androidx.core 1.17, androidx.browser 1.9) requires compiling
+    // against API 36; staying on 35 fails :app:checkReleaseAarMetadata.
+    // compileSdk only controls which APIs are visible — targetSdk below still
+    // governs runtime behaviour, so this is a safe bump.
+    compileSdk 36
+    ndkVersion flutter.ndkVersion
+
+    defaultConfig {
+        applicationId "com.gulshantube.app"
+        minSdk 24
+        targetSdk 35
+        versionCode flutter.versionCode
+        versionName flutter.versionName
+        multiDexEnabled true
+    }
+
+    signingConfigs {
+        release {
+            if (storeToUse != null) {
+                storeFile storeToUse
+                // Credentials loaded from gradle.properties or CI/CD environment variables
+                // NEVER hardcode secrets here. See gradle.properties.example
+                storePassword findProperty('GULSHAN_TUBE_STORE_PASSWORD') ?: System.getenv('GULSHAN_TUBE_STORE_PASSWORD') ?: ''
+                keyAlias findProperty('GULSHAN_TUBE_KEY_ALIAS') ?: System.getenv('GULSHAN_TUBE_KEY_ALIAS') ?: ''
+                keyPassword findProperty('GULSHAN_TUBE_KEY_PASSWORD') ?: System.getenv('GULSHAN_TUBE_KEY_PASSWORD') ?: ''
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            if (storeToUse != null) {
+                signingConfig signingConfigs.release
+            } else if (releaseRequested) {
+                throw new GradleException("Release keystore is missing; refusing to produce a debug-signed release APK")
+            }
+            // Shrink + obfuscate release builds. This cuts APK size
+            // substantially and stops the whole app being trivially
+            // decompilable. Keep rules that R8 cannot infer (reflection,
+            // MethodChannel entry points, ExoPlayer renderers) live in
+            // proguard-rules.pro.
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'),
+                    'proguard-rules.pro'
+        }
+        debug {
+            applicationIdSuffix ""
+        }
+    }
+
+    compileOptions {
+        coreLibraryDesugaringEnabled true
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    kotlinOptions {
+        jvmTarget = "17"
+    }
+
+    lint {
+        checkReleaseBuilds false
+        abortOnError false
+    }
+}
+
+dependencies {
+    coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:2.1.4"
+}
+
+flutter {
+    source "../.."
+}

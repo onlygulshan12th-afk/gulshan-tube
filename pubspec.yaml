@@ -1,0 +1,41 @@
+name: gulshan_tube
+description: Open-source Flutter YouTube client with mini player, PiP, background media controls, SponsorBlock, and more.
+publish_to: 'none'
+version: 1.12.0+27
+homepage: https://github.com/GULSHAN-TUBE/GULSHAN TUBE
+repository: https://github.com/GULSHAN-TUBE/GULSHAN TUBE
+issue_tracker: https://github.com/GULSHAN-TUBE/GULSHAN TUBE/issues
+documentation: https://github.com/GULSHAN-TUBE/GULSHAN TUBE/blob/main/README.md
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+  crypto: ^3.0.7
+  google_fonts: ^6.2.1
+  cached_network_image: ^3.4.1
+  video_player: ^2.9.2
+  provider: ^6.1.2
+  http: ^1.2.2
+  shared_preferences: ^2.3.3
+  url_launcher: ^6.3.1
+  share_plus: ^10.1.4
+  package_info_plus: ^8.1.2
+  wakelock_plus: ^1.2.10
+  path_provider: ^2.1.5
+  permission_handler: ^11.3.1
+  audio_session: ^0.1.21
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/
+    - assets/icons/
